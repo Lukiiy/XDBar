@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "id": "xpbarenhances",
+  "version": "${version}",
+  "name": "XPBarEnhances",
+  "description": "Little tweaks to the experience bar. Config is available @ .minecraft/config/xpbarenhances.properties",
+  "authors": ["Lukiiy"],
+  "contact": {},
+  "license": "MIT",
+  "icon": "assets/xpbarenhances/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "me.lukiiy.xpbarenhances.XPBarEnhances"
+    ]
+  },
+  "mixins": [
+    "xpbarenhances.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "minecraft": "${minecraft_version}"
+  }
+}
