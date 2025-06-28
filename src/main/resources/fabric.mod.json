@@ -1,24 +1,33 @@
 {
   "schemaVersion": 1,
-  "id": "xpbarenhances",
+  "id": "xdbar",
   "version": "${version}",
-  "name": "XPBarEnhances",
-  "description": "Little tweaks to the experience bar. Config is available @ .minecraft/config/xpbarenhances.properties",
+  "name": "XDBar",
+  "description": "Very small tweaks to the experience bar & locator bar",
   "authors": ["Lukiiy"],
-  "contact": {},
+  "contact": {
+    "sources": "https://github.com/Lukiiy/XDBar",
+    "issues": "https://github.com/Lukiiy/XDBar/issues"
+  },
   "license": "MIT",
-  "icon": "assets/xpbarenhances/icon.png",
+  "icon": "assets/xdbar/icon.png",
   "environment": "client",
   "entrypoints": {
     "client": [
-      "me.lukiiy.xpbarenhances.XPBarEnhances"
+      "me.lukiiy.xdbar.XDBar"
+    ],
+    "modmenu": [
+      "me.lukiiy.xdbar.hook.ModMenuHook"
     ]
   },
   "mixins": [
-    "xpbarenhances.mixins.json"
+    "xdbar.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=${loader_version}",
     "minecraft": "${minecraft_version}"
+  },
+  "suggests": {
+    "modmenu": ">=15.0.0-beta.1"
   }
 }

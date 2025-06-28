@@ -1,4 +1,4 @@
-package me.lukiiy.xpbarenhances;
+package me.lukiiy.xdbar;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
@@ -6,8 +6,8 @@ import net.minecraft.client.gui.contextualbar.ExperienceBarRenderer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class XPBarEnhances implements ClientModInitializer {
-    public static final String MOD_ID = "xpBarEnhancer";
+public class XDBar implements ClientModInitializer {
+    public static final String MOD_ID = "xdBar";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
     public static Config config;
@@ -16,35 +16,39 @@ public class XPBarEnhances implements ClientModInitializer {
     public static boolean shadow;
     public static int color;
     public static int offsetY;
-    public static boolean locatorBarDoesntDisableXPBar;
+    public static boolean keepXPBarWithLocator;
 
     @Override
     public void onInitializeClient() {
-        config = new Config(FabricLoader.getInstance(), LOGGER, MOD_ID, "XPBarEnhancer");
+        config = new Config(FabricLoader.getInstance().getConfigDir(), LOGGER, MOD_ID, "XDBar");
 
         config.setIfAbsent("level.shadow", "true");
-        config.setIfAbsent("level.color", "default # Put a hex color here if you want");
+        config.setIfAbsent("level.color", "80FF20");
         config.setIfAbsent("level.offsetY", "38");
-        config.setIfAbsent("locatorBarDoesntDisableXPBar", "true");
+        config.setIfAbsent("keepXPBarWithLocator", "true");
 
         updateConfig();
     }
 
     public static void updateConfig() {
         shadow = config.getBoolean("level.shadow");
-        locatorBarDoesntDisableXPBar = config.getBoolean("locatorBarDoesntDisableXPBar");
+        keepXPBarWithLocator = config.getBoolean("keepXPBarWithLocator");
 
         String cTemp = config.get("level.color");
-        if (cTemp.startsWith("default")) color = -8323296;
-        else color = hexToMC(cTemp);
+        color = cTemp.startsWith("default") ? -8323296 : hexToMC(cTemp);
 
         offsetY = Integer.getInteger(config.get("level.offsetY"), 38);
+        config.save();
     }
 
-    private static int hexToMC(String hex) {
+    public static int hexToMC(String hex) {
         hex = hex.replace("#", "");
         if (hex.length() == 6) hex = "FF" + hex;
 
-        return (int) Long.parseLong(hex, 16);
+        try {
+            return (int) Long.parseLong(hex, 16);
+        } catch (NumberFormatException e) {
+            return 0;
+        }
     }
 }

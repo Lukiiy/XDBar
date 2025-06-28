@@ -1,6 +1,5 @@
-package me.lukiiy.xpbarenhances;
+package me.lukiiy.xdbar;
 
-import net.fabricmc.loader.api.FabricLoader;
 import org.slf4j.Logger;
 
 import java.io.IOException;
@@ -15,11 +14,10 @@ public final class Config {
     private final String modName;
     private final Logger logger;
 
-    public Config(FabricLoader fabricLoader, Logger logger, String fileName, String modName) {
+    public Config(Path configDir, Logger logger, String fileName, String modName) {
         this.modName = modName;
-        this.filePath = Path.of(fabricLoader.getConfigDir().toString()).resolve(fileName + ".properties");
+        this.filePath = configDir.resolve(fileName + ".properties");
         this.logger = logger;
-
         load();
     }
 
@@ -63,9 +61,5 @@ public final class Config {
 
     public Boolean getBoolean(String key) {
         return get(key).equalsIgnoreCase("true");
-    }
-
-    public String getOrDefault(String key, String defaultKey) {
-        return properties.getProperty(key, defaultKey);
     }
 }

@@ -1,6 +1,8 @@
-package me.lukiiy.xpbarenhances.mixin;
+package me.lukiiy.xdbar.mixin;
 
-import me.lukiiy.xpbarenhances.XPBarEnhances;
+import me.lukiiy.xdbar.XDBar;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.contextualbar.ExperienceBarRenderer;
@@ -10,15 +12,15 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+@Environment(EnvType.CLIENT)
 @Mixin(LocatorBarRenderer.class)
 public class LocBarRenderMixin {
     @Inject(method = "renderBackground", at = @At("HEAD"), cancellable = true)
     private void renderBg(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
+        if (!XDBar.keepXPBarWithLocator) return;
         ci.cancel();
 
-        if (XPBarEnhances.locatorBarDoesntDisableXPBar) {
-            ExperienceBarRenderer xpRender = XPBarEnhances.xpBarRenderer;
-            if (xpRender != null) xpRender.renderBackground(guiGraphics, deltaTracker);
-        }
+        ExperienceBarRenderer xpRender = XDBar.xpBarRenderer;
+        if (xpRender != null) xpRender.renderBackground(guiGraphics, deltaTracker);
     }
 }
