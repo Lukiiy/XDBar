@@ -32,13 +32,13 @@ public class ConfigMenu extends Screen {
         LinearLayout content = this.layout.addToContents(LinearLayout.vertical()).spacing(8);
         content.defaultCellSetting().alignHorizontallyCenter();
 
-        // Keep XP bar with locator toggle
+        // Keep XP bar with locator bar
         addToggle(content, "xdbar.config.keepXPBarWithLocator", XDBar.keepXPBarWithLocator, val -> XDBar.keepXPBarWithLocator = val, "keepXPBarWithLocator");
 
-        // Level indicator label
+        // Level indicator
         content.addChild(new StringWidget(Component.translatable("xdbar.config.levelIndicator"), font));
 
-        // Shadow toggle
+        // Shadow
         addToggle(content, "xdbar.config.levelShadow", XDBar.shadow, val -> XDBar.shadow = val, "level.shadow");
 
         // Color
@@ -57,7 +57,7 @@ public class ConfigMenu extends Screen {
 
         content.addChild(colorGrid);
 
-        // OffsetY input (Grid: 2 columns)
+        // OffsetY input
         GridLayout offsetGrid = new GridLayout().rowSpacing(2);
         offsetGrid.defaultCellSetting().alignVerticallyMiddle().paddingHorizontal(2);
 
@@ -71,7 +71,7 @@ public class ConfigMenu extends Screen {
 
         content.addChild(offsetGrid);
 
-        // Footer "Done" button
+        // Done
         this.layout.addToFooter(Button.builder(CommonComponents.GUI_DONE, b -> onClose()).width(200).build());
 
         repositionElements();
