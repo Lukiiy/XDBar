@@ -3,6 +3,7 @@
   "xdbar.config.levelIndicator": "Level Indicator",
   "xdbar.config.levelShadow": "Shadow",
   "xdbar.config.levelColor": "Color",
+  "xdbar.config.levelOutline": "Outline",
   "xdbar.config.offsetY": "Y Offset",
   "xdbar.config.keepXPBarWithLocator": "Keep XP Bar with Locator Bar"
 }

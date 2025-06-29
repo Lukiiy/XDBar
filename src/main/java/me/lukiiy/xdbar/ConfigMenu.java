@@ -1,5 +1,6 @@
 package me.lukiiy.xdbar;
 
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.StringWidget;
@@ -11,7 +12,6 @@ import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Consumer;
 
 public class ConfigMenu extends Screen {
@@ -33,43 +33,47 @@ public class ConfigMenu extends Screen {
         content.defaultCellSetting().alignHorizontallyCenter();
 
         // Keep XP bar with locator bar
-        addToggle(content, "xdbar.config.keepXPBarWithLocator", XDBar.keepXPBarWithLocator, val -> XDBar.keepXPBarWithLocator = val, "keepXPBarWithLocator");
+        addToggle(content, "keepXPBarWithLocator", XDBar.keepXPBarWithLocator, val -> XDBar.keepXPBarWithLocator = val, "keepXPBarWithLocator");
 
         // Level indicator
         content.addChild(new StringWidget(Component.translatable("xdbar.config.levelIndicator"), font));
 
+        // Outline
+        addToggle(content, "levelOutline", XDBar.outline, val -> XDBar.outline = val, "level.outline");
+
         // Shadow
-        addToggle(content, "xdbar.config.levelShadow", XDBar.shadow, val -> XDBar.shadow = val, "level.shadow");
+        addToggle(content, "levelShadow", XDBar.shadow, val -> XDBar.shadow = val, "level.shadow");
 
         // Color
-        GridLayout colorGrid = new GridLayout().rowSpacing(2);
-        colorGrid.defaultCellSetting().alignVerticallyMiddle().paddingHorizontal(2);
-        GridLayout.RowHelper colorRow = colorGrid.createRowHelper(2);
+        GridLayout colorDiv = new GridLayout().rowSpacing(2);
+        colorDiv.defaultCellSetting().alignVerticallyMiddle().paddingHorizontal(2);
 
-        int colorPreview = ThreadLocalRandom.current().nextInt(90) + 10;
-        MutableComponent colorLabel = Component.translatable("xdbar.config.levelColor").append(" (").append(Component.literal(String.valueOf(colorPreview)).withColor(XDBar.color)).append("):");
+        GridLayout.RowHelper colorRow = colorDiv.createRowHelper(2);
+        colorRow.addChild(new StringWidget(Component.translatable("xdbar.config.levelColor"), font));
 
-        colorRow.addChild(new StringWidget(colorLabel, font));
         colorInput = new EditBox(font, 0, 0, 50, 20, Component.empty());
+        colorInput.setMaxLength(7);
         colorInput.setValue(String.format("#%06X", XDBar.color & 0xFFFFFF));
+        colorInput.setFilter(s -> s.isEmpty() || s.matches("#?[0-9a-fA-F]{0,6}"));
+
         colorRow.addChild(colorInput);
-        colorInput.setResponder(v -> colorLabel.getSiblings().set(1, Component.literal(String.valueOf(colorPreview)).withColor(XDBar.hexToMC(v))));
 
-        content.addChild(colorGrid);
+        content.addChild(colorDiv);
 
-        // OffsetY input
-        GridLayout offsetGrid = new GridLayout().rowSpacing(2);
-        offsetGrid.defaultCellSetting().alignVerticallyMiddle().paddingHorizontal(2);
+        // OffsetY
+        GridLayout offsetDiv = new GridLayout().rowSpacing(2);
+        offsetDiv.defaultCellSetting().alignVerticallyMiddle().paddingHorizontal(2);
 
-        GridLayout.RowHelper offsetRow = offsetGrid.createRowHelper(2);
-
+        GridLayout.RowHelper offsetRow = offsetDiv.createRowHelper(2);
         offsetRow.addChild(new StringWidget(Component.translatable("xdbar.config.offsetY"), font));
+
         offsetYInput = new EditBox(font, 0, 0, 50, 20, Component.empty());
-        offsetYInput.setFilter(s -> s.isEmpty() || s.matches("-?\\d{0,3}"));
         offsetYInput.setValue(String.valueOf(XDBar.offsetY));
+        offsetYInput.setFilter(s -> s.matches("-?\\d+"));
+
         offsetRow.addChild(offsetYInput);
 
-        content.addChild(offsetGrid);
+        content.addChild(offsetDiv);
 
         // Done
         this.layout.addToFooter(Button.builder(CommonComponents.GUI_DONE, b -> onClose()).width(200).build());
@@ -85,34 +89,29 @@ public class ConfigMenu extends Screen {
 
     private void addToggle(LinearLayout layout, String key, boolean current, Consumer<Boolean> setter, String configKey) {
         Button toggleButton = Button.builder(toggleComponent(key, current), b -> {
-            boolean currentValue = XDBar.config.getBoolean(configKey);
-            boolean newValue = !currentValue;
+            boolean v = !XDBar.config.getBoolean(configKey);
 
-            setter.accept(newValue);
-            XDBar.config.set(configKey, String.valueOf(newValue));
-            b.setMessage(toggleComponent(key, newValue));
+            setter.accept(v);
+            XDBar.config.set(configKey, String.valueOf(v));
+            b.setMessage(toggleComponent(key, v));
         }).width(180).build();
 
         layout.addChild(toggleButton);
     }
 
     private Component toggleComponent(String key, boolean current) {
-        return Component.translatable(key).append(": ").append(current ? CommonComponents.OPTION_ON : CommonComponents.OPTION_OFF);
+        return Component.translatable("xdbar.config." + key).append(": ").append(current ? CommonComponents.OPTION_ON : CommonComponents.OPTION_OFF);
     }
 
     @Override
     public void onClose() {
-        int color = XDBar.hexToMC(colorInput.getValue());
-
-        XDBar.color = color;
-        XDBar.config.set("level.color", Integer.toHexString(color & 0xFFFFFF).toUpperCase());
-
         try {
-            int offset = Math.clamp(Integer.parseInt(offsetYInput.getValue()), -100, 100);
+            XDBar.offsetY = Integer.parseInt(offsetYInput.getValue());
+        } catch (NumberFormatException ignored) {
+            XDBar.LOGGER.info("({}) Couldn't parse the value as an integer.", Component.translatable("xdbar.config.offsetY").getString());
+        }
 
-            XDBar.offsetY = offset;
-            XDBar.config.set("level.offsetY", String.valueOf(offset));
-        } catch (NumberFormatException ignored) {}
+        XDBar.config.set("level.offsetY", String.valueOf(XDBar.offsetY));
 
         XDBar.updateConfig();
         if (minecraft != null) minecraft.setScreen(parent);

@@ -12,19 +12,23 @@ public class XDBar implements ClientModInitializer {
 
     public static Config config;
     public static ExperienceBarRenderer xpBarRenderer;
+    public static final int DEF_COLOR = -8323296; // vanilla level color
+    public static final int DEF_OFFSET = 35;
 
     public static boolean shadow;
     public static int color;
     public static int offsetY;
     public static boolean keepXPBarWithLocator;
+    public static boolean outline;
 
     @Override
     public void onInitializeClient() {
         config = new Config(FabricLoader.getInstance().getConfigDir(), LOGGER, MOD_ID, "XDBar");
 
-        config.setIfAbsent("level.shadow", "true");
+        config.setIfAbsent("level.shadow", "false");
+        config.setIfAbsent("level.outline", "true");
         config.setIfAbsent("level.color", "80FF20");
-        config.setIfAbsent("level.offsetY", "38");
+        config.setIfAbsent("level.offsetY", String.valueOf(DEF_OFFSET));
         config.setIfAbsent("keepXPBarWithLocator", "true");
 
         updateConfig();
@@ -32,16 +36,22 @@ public class XDBar implements ClientModInitializer {
 
     public static void updateConfig() {
         shadow = config.getBoolean("level.shadow");
+        outline = config.getBoolean("level.outline");
         keepXPBarWithLocator = config.getBoolean("keepXPBarWithLocator");
 
         String cTemp = config.get("level.color");
-        color = cTemp.startsWith("default") ? -8323296 : hexToMC(cTemp);
+        color = cTemp.startsWith("default") ? DEF_COLOR : hexToInt(cTemp);
 
-        offsetY = Integer.getInteger(config.get("level.offsetY"), 38);
+        try {
+            offsetY = Integer.parseInt(config.get("level.offsetY"));
+        } catch (NumberFormatException e) {
+            offsetY = DEF_OFFSET;
+        }
+
         config.save();
     }
 
-    public static int hexToMC(String hex) {
+    public static int hexToInt(String hex) {
         hex = hex.replace("#", "");
         if (hex.length() == 6) hex = "FF" + hex;
 
