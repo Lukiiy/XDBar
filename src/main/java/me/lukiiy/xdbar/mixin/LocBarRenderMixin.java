@@ -5,7 +5,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.contextualbar.ExperienceBarRenderer;
 import net.minecraft.client.gui.contextualbar.LocatorBarRenderer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -17,10 +16,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class LocBarRenderMixin {
     @Inject(method = "renderBackground", at = @At("HEAD"), cancellable = true)
     private void renderBg(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
-        if (!XDBar.keepXPBarWithLocator) return;
-        ci.cancel();
-
-        ExperienceBarRenderer xpRender = XDBar.xpBarRenderer;
-        if (xpRender != null) xpRender.renderBackground(guiGraphics, deltaTracker);
+        if (!XDBar.prioritizeOthers) ci.cancel();
     }
 }

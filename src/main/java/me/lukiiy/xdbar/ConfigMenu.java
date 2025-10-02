@@ -1,6 +1,5 @@
 package me.lukiiy.xdbar;
 
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.StringWidget;
@@ -10,14 +9,12 @@ import net.minecraft.client.gui.layouts.LinearLayout;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 
 import java.util.function.Consumer;
 
 public class ConfigMenu extends Screen {
     private static final Component TITLE = Component.translatable("xdbar.config.title");
     private final Screen parent;
-    private EditBox colorInput;
     private EditBox offsetYInput;
     private final HeaderAndFooterLayout layout = new HeaderAndFooterLayout(this);
 
@@ -29,11 +26,12 @@ public class ConfigMenu extends Screen {
     @Override
     protected void init() {
         this.layout.addTitleHeader(TITLE, this.font);
+
         LinearLayout content = this.layout.addToContents(LinearLayout.vertical()).spacing(8);
         content.defaultCellSetting().alignHorizontallyCenter();
 
-        // Keep XP bar with locator bar
-        addToggle(content, "keepXPBarWithLocator", XDBar.keepXPBarWithLocator, val -> XDBar.keepXPBarWithLocator = val, "keepXPBarWithLocator");
+        addToggle(content, "locators", XDBar.pins, val -> XDBar.pins = val, "locatorBar.pins");
+        addToggle(content, "locatorBg", XDBar.prioritizeOthers, val -> XDBar.prioritizeOthers = val, "locatorBar.background");
 
         // Level indicator
         content.addChild(new StringWidget(Component.translatable("xdbar.config.levelIndicator"), font));
@@ -51,7 +49,7 @@ public class ConfigMenu extends Screen {
         GridLayout.RowHelper colorRow = colorDiv.createRowHelper(2);
         colorRow.addChild(new StringWidget(Component.translatable("xdbar.config.levelColor"), font));
 
-        colorInput = new EditBox(font, 0, 0, 50, 20, Component.empty());
+        EditBox colorInput = new EditBox(font, 0, 0, 50, 20, Component.empty());
         colorInput.setMaxLength(7);
         colorInput.setValue(String.format("#%06X", XDBar.color & 0xFFFFFF));
         colorInput.setFilter(s -> s.isEmpty() || s.matches("#?[0-9a-fA-F]{0,6}"));

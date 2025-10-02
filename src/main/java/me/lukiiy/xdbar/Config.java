@@ -3,10 +3,9 @@ package me.lukiiy.xdbar;
 import org.slf4j.Logger;
 
 import java.io.IOException;
-import java.util.Properties;
-
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Properties;
 
 public final class Config {
     private final Properties properties = new Properties();

@@ -3,12 +3,13 @@ package me.lukiiy.xdbar.mixin;
 import me.lukiiy.xdbar.XDBar;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.contextualbar.ContextualBarRenderer;
-import net.minecraft.client.gui.contextualbar.ExperienceBarRenderer;
+import net.minecraft.client.gui.contextualbar.LocatorBarRenderer;
 import net.minecraft.network.chat.Component;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -26,17 +27,20 @@ import java.util.function.Supplier;
 @Environment(EnvType.CLIENT)
 @Mixin(Gui.class)
 public class GuiMixin {
+    @Shadow @Final private Minecraft minecraft;
     @Shadow @Final private Map<?, Supplier<ContextualBarRenderer>> contextualInfoBarRenderers;
+
+    @Unique private LocatorBarRenderer locatorRenderer;
     @Unique private static final int TEXT_OUTLINE = -16777216;
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void xdBar$getRenderer(Minecraft minecraft, CallbackInfo ci) {
         contextualInfoBarRenderers.values().stream()
                 .map(Supplier::get)
-                .filter(ExperienceBarRenderer.class::isInstance) // ooh!
-                .map(ExperienceBarRenderer.class::cast)
+                .filter(LocatorBarRenderer.class::isInstance) // ooh!
+                .map(LocatorBarRenderer.class::cast)
                 .findFirst()
-                .ifPresent(render -> XDBar.xpBarRenderer = render);
+                .ifPresent(render -> locatorRenderer = render);
     }
 
     // overwriting
@@ -59,8 +63,13 @@ public class GuiMixin {
         }
     }
 
+    @Inject(method = "renderHotbarAndDecorations", at = @At("TAIL"))
+    private void xdBar$renderLocator(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
+        if (XDBar.pins && minecraft.player != null && minecraft.player.connection.getWaypointManager().hasWaypoints()) locatorRenderer.render(guiGraphics, deltaTracker);
+    }
+
     @Inject(method = "willPrioritizeExperienceInfo", at = @At("HEAD"), cancellable = true)
-    private void xdBar$prioritizeLocator(CallbackInfoReturnable<Boolean> cir) {
-        if (XDBar.keepXPBarWithLocator) cir.setReturnValue(false);
+    private void xdBar$prioritizeXP(CallbackInfoReturnable<Boolean> cir) {
+        if (!XDBar.prioritizeOthers) cir.setReturnValue(true);
     }
 }

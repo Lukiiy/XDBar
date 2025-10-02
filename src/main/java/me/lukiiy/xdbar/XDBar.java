@@ -2,7 +2,6 @@ package me.lukiiy.xdbar;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.gui.contextualbar.ExperienceBarRenderer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,14 +10,14 @@ public class XDBar implements ClientModInitializer {
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
     public static Config config;
-    public static ExperienceBarRenderer xpBarRenderer;
     public static final int DEF_COLOR = -8323296; // vanilla level color
     public static final int DEF_OFFSET = 35;
 
     public static boolean shadow;
     public static int color;
     public static int offsetY;
-    public static boolean keepXPBarWithLocator;
+    public static boolean pins;
+    public static boolean prioritizeOthers;
     public static boolean outline;
 
     @Override
@@ -29,7 +28,9 @@ public class XDBar implements ClientModInitializer {
         config.setIfAbsent("level.outline", "true");
         config.setIfAbsent("level.color", "80FF20");
         config.setIfAbsent("level.offsetY", String.valueOf(DEF_OFFSET));
-        config.setIfAbsent("keepXPBarWithLocator", "true");
+
+        config.setIfAbsent("locatorBar.pins", "true");
+        config.setIfAbsent("locatorBar.background", "false");
 
         updateConfig();
     }
@@ -37,7 +38,9 @@ public class XDBar implements ClientModInitializer {
     public static void updateConfig() {
         shadow = config.getBoolean("level.shadow");
         outline = config.getBoolean("level.outline");
-        keepXPBarWithLocator = config.getBoolean("keepXPBarWithLocator");
+
+        pins = config.getBoolean("locatorBar.pins");
+        prioritizeOthers = config.getBoolean("locatorBar.background");
 
         String cTemp = config.get("level.color");
         color = cTemp.startsWith("default") ? DEF_COLOR : hexToInt(cTemp);
