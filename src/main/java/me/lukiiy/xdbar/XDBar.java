@@ -1,17 +1,16 @@
 package me.lukiiy.xdbar;
 
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.loader.api.FabricLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class XDBar implements ClientModInitializer {
     public static final String MOD_ID = "xdBar";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
+    public static Config config = new Config(MOD_ID, "XDBar");
 
-    public static Config config;
     public static final int DEF_COLOR = -8323296; // vanilla level color
-    public static final int DEF_OFFSET = 35;
+    public static final int DEF_OFFSET = 35; // vanilla offset
 
     public static boolean shadow;
     public static int color;
@@ -22,8 +21,11 @@ public class XDBar implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        config = new Config(FabricLoader.getInstance().getConfigDir(), LOGGER, MOD_ID, "XDBar");
+        loadConfig();
+    }
 
+    public static void loadConfig() {
+        // Default preset
         config.setIfAbsent("level.shadow", "false");
         config.setIfAbsent("level.outline", "true");
         config.setIfAbsent("level.color", "80FF20");
@@ -32,18 +34,14 @@ public class XDBar implements ClientModInitializer {
         config.setIfAbsent("locatorBar.pins", "true");
         config.setIfAbsent("locatorBar.background", "false");
 
-        updateConfig();
-    }
-
-    public static void updateConfig() {
+        // Load
         shadow = config.getBoolean("level.shadow");
         outline = config.getBoolean("level.outline");
-
         pins = config.getBoolean("locatorBar.pins");
         prioritizeOthers = config.getBoolean("locatorBar.background");
 
-        String cTemp = config.get("level.color");
-        color = cTemp.startsWith("default") ? DEF_COLOR : hexToInt(cTemp);
+        String processed = config.getOrDefault("level.color", "default");
+        color = processed.equalsIgnoreCase("default") ? DEF_COLOR : Integer.parseInt(processed);
 
         try {
             offsetY = Integer.parseInt(config.get("level.offsetY"));
@@ -55,11 +53,13 @@ public class XDBar implements ClientModInitializer {
     }
 
     public static int hexToInt(String hex) {
+        if (hex == null || hex.isEmpty()) return 0;
+
         hex = hex.replace("#", "");
         if (hex.length() == 6) hex = "FF" + hex;
 
         try {
-            return (int) Long.parseLong(hex, 16);
+            return (int) (Long.parseLong(hex, 16) & 0xFFFFFFFFL);
         } catch (NumberFormatException e) {
             return 0;
         }

@@ -1,48 +1,46 @@
 package me.lukiiy.xdbar;
 
-import org.slf4j.Logger;
+import net.fabricmc.loader.api.FabricLoader;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 
-public final class Config {
+public class Config {
     private final Properties properties = new Properties();
-    public final Path filePath;
+    private final File file;
     private final String modName;
-    private final Logger logger;
 
-    public Config(Path configDir, Logger logger, String fileName, String modName) {
+    public Config(String fileName, String modName) {
+        File confDir = FabricLoader.getInstance().getConfigDir().resolve(modName).toFile();
+        if (!confDir.exists()) confDir.mkdirs();
+
+        this.file = new File(confDir, fileName + ".properties");
         this.modName = modName;
-        this.filePath = configDir.resolve(fileName + ".properties");
-        this.logger = logger;
+
         load();
     }
 
     public void load() {
-        if (Files.notExists(filePath)) {
-            save();
-            return;
-        }
+        if (!file.exists()) save();
 
-        try (var reader = Files.newBufferedReader(filePath)) {
+        try (InputStreamReader reader = new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8)) {
             properties.load(reader);
         } catch (IOException e) {
-            logger.error("Failed to load config: {}", e.getMessage(), e);
+            e.printStackTrace();
         }
     }
 
     public void save() {
-        try (var writer = Files.newBufferedWriter(filePath)) {
+        try (OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8)) {
             properties.store(writer, modName + " Config");
         } catch (IOException e) {
-            logger.error("Failed to save config: {}", e.getMessage(), e);
+            e.printStackTrace();
         }
     }
 
     public boolean has(String key) {
-        return properties.containsKey(key);
+        return properties.getProperty(key) != null;
     }
 
     public void set(String key, String value) {
@@ -51,14 +49,22 @@ public final class Config {
     }
 
     public void setIfAbsent(String key, String value) {
-        if (!has(key)) set(key, value);
+        if (has(key)) return;
+
+        set(key, value);
     }
 
     public String get(String key) {
         return properties.getProperty(key);
     }
 
-    public Boolean getBoolean(String key) {
-        return get(key).equalsIgnoreCase("true");
+    public boolean getBoolean(String key) {
+        String value = get(key);
+
+        return value != null && value.equalsIgnoreCase("true");
+    }
+
+    public String getOrDefault(String key, String defaultValue) {
+        return properties.getProperty(key, defaultValue);
     }
 }

@@ -35,15 +35,13 @@ public class GuiMixin {
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void xdBar$getRenderer(Minecraft minecraft, CallbackInfo ci) {
-        contextualInfoBarRenderers.values().stream()
-                .map(Supplier::get)
+        contextualInfoBarRenderers.values().stream().map(Supplier::get)
                 .filter(LocatorBarRenderer.class::isInstance) // ooh!
                 .map(LocatorBarRenderer.class::cast)
                 .findFirst()
                 .ifPresent(render -> locatorRenderer = render);
     }
 
-    // overwriting
     @Redirect(method = "renderHotbarAndDecorations", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/contextualbar/ContextualBarRenderer;renderExperienceLevel(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/client/gui/Font;I)V"))
     private void xdBar$displayLevel(GuiGraphics guiGraphics, Font font, int level) {
         if (!XDBar.shadow && XDBar.outline && XDBar.color == XDBar.DEF_COLOR && XDBar.offsetY == XDBar.DEF_OFFSET) {
@@ -59,6 +57,7 @@ public class GuiMixin {
                 guiGraphics.drawString(font, value, x, y + 1, TEXT_OUTLINE, false);
                 guiGraphics.drawString(font, value, x, y - 1, TEXT_OUTLINE, false);
             }
+
             guiGraphics.drawString(font, value, x, y, XDBar.color, XDBar.shadow);
         }
     }
