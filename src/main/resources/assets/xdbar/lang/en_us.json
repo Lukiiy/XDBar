@@ -2,6 +2,7 @@
   "xdbar.config.title": "XDBar Config",
   "xdbar.setting.locatorBar.pins": "Waypoint Pins",
   "xdbar.setting.locatorBar.background": "Locator Background",
+  "xdbar.setting.locatorBar.arrows": "Waypoint Pitch Arrows",
   "xdbar.setting.level.outline": "Text Outline",
   "xdbar.setting.level.shadow": "Text Shadow",
   "xdbar.setting.level.color": "Text Color",

@@ -18,6 +18,7 @@ public class XDBar implements ClientModInitializer {
     public static boolean pins;
     public static boolean prioritizeOthers;
     public static boolean outline;
+    public static boolean arrows;
 
     @Override
     public void onInitializeClient() {
@@ -33,12 +34,14 @@ public class XDBar implements ClientModInitializer {
 
         config.setIfAbsent("locatorBar.pins", "true");
         config.setIfAbsent("locatorBar.background", "false");
+        config.setIfAbsent("locatorBar.arrows", "true");
 
         // Load
         shadow = config.getBoolean("level.shadow");
         outline = config.getBoolean("level.outline");
         pins = config.getBoolean("locatorBar.pins");
         prioritizeOthers = config.getBoolean("locatorBar.background");
+        arrows = config.getBoolean("locatorBar.arrows");
 
         String processed = config.getOrDefault("level.color", "default");
         color = processed.equalsIgnoreCase("default") ? DEF_COLOR : Integer.parseInt(processed);

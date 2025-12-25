@@ -71,6 +71,7 @@ public class ConfigMenu extends Screen {
             addEntry(new CategoryEntry("locator"));
             addEntry(new BooleanEntry("locatorBar.pins"));
             addEntry(new BooleanEntry("locatorBar.background"));
+            addEntry(new BooleanEntry("locatorBar.arrows"));
 
             addEntry(new CategoryEntry("level"));
             addEntry(new BooleanEntry("level.outline"));
