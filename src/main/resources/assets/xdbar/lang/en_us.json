@@ -1,10 +1,17 @@
 {
   "xdbar.config.title": "XDBar Config",
-  "xdbar.config.levelIndicator": "Level Indicator",
-  "xdbar.config.levelShadow": "Shadow",
-  "xdbar.config.levelColor": "Color",
-  "xdbar.config.levelOutline": "Outline",
-  "xdbar.config.offsetY": "Y Offset",
-  "xdbar.config.locators": "Locator Pins",
-  "xdbar.config.locatorBg": "Locator Background"
+  "xdbar.setting.locatorBar.pins": "Pins",
+  "xdbar.setting.locatorBar.background": "Locator Background",
+  "xdbar.setting.locatorBar.arrows": "Pitch Arrows",
+  "xdbar.setting.locatorBar.coloredArrows": "Colored Arrows",
+  "xdbar.setting.locatorBar.distance": "Show distance",
+  "xdbar.setting.level.outline": "Text Outline",
+  "xdbar.setting.level.shadow": "Text Shadow",
+  "xdbar.setting.level.color": "Text Color",
+  "xdbar.setting.level.offsetY": "Text Y Offset",
+  "xdbar.config.colortip": "Insert a valid RGB Hex value!\nExample: 80FF20",
+  "xdbar.config.intbox": "Insert a valid number between %s and %s.",
+  "xdbar.config.category.locator": "Locator Bar Changes",
+  "xdbar.config.category.level": "Level Indicator Visuals",
+  "xdbar.config.stylecycle": "Style"
 }
