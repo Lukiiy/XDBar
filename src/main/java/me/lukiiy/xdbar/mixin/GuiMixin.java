@@ -51,24 +51,18 @@ public class GuiMixin {
             int x = (guiGraphics.guiWidth() - font.width(value)) / 2;
             int y = guiGraphics.guiHeight() - XDBar.offsetY;
 
-            if (XDBar.outline) {
-                guiGraphics.drawString(font, value, x + 1, y, TEXT_OUTLINE, false);
-                guiGraphics.drawString(font, value, x - 1, y, TEXT_OUTLINE, false);
-                guiGraphics.drawString(font, value, x, y + 1, TEXT_OUTLINE, false);
-                guiGraphics.drawString(font, value, x, y - 1, TEXT_OUTLINE, false);
-            }
-
+            if (XDBar.outline) XDBar.textOutline(guiGraphics, font, value, x, y, TEXT_OUTLINE);
             guiGraphics.drawString(font, value, x, y, XDBar.color, XDBar.shadow);
         }
     }
 
     @Inject(method = "renderHotbarAndDecorations", at = @At("TAIL"))
     private void xdBar$renderLocator(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
-        if (XDBar.pins && minecraft.player != null && minecraft.player.connection.getWaypointManager().hasWaypoints()) locatorRenderer.render(guiGraphics, deltaTracker);
+        if (minecraft.player != null && minecraft.player.connection.getWaypointManager().hasWaypoints()) locatorRenderer.render(guiGraphics, deltaTracker);
     }
 
     @Inject(method = "willPrioritizeExperienceInfo", at = @At("HEAD"), cancellable = true)
     private void xdBar$prioritizeXP(CallbackInfoReturnable<Boolean> cir) {
-        if (!XDBar.prioritizeOthers) cir.setReturnValue(true);
+        cir.setReturnValue(!XDBar.renderBackground(minecraft));
     }
 }

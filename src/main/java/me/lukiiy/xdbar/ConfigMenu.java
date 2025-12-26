@@ -70,8 +70,10 @@ public class ConfigMenu extends Screen {
         private void loadStuff() {
             addEntry(new CategoryEntry("locator"));
             addEntry(new BooleanEntry("locatorBar.pins"));
-            addEntry(new BooleanEntry("locatorBar.background"));
+            addEntry(new EnumEntry<>("locatorBar.background", "xdbar.config.stylecycle", XDBar.LocatorBgVisibility.class));
             addEntry(new BooleanEntry("locatorBar.arrows"));
+            addEntry(new BooleanEntry("locatorBar.coloredArrows"));
+            addEntry(new BooleanEntry("locatorBar.distance"));
 
             addEntry(new CategoryEntry("level"));
             addEntry(new BooleanEntry("level.outline"));
@@ -118,9 +120,9 @@ public class ConfigMenu extends Screen {
 
             public BooleanEntry(String key) {
                 this.label = Component.translatable("xdbar.setting." + key);
-                boolean value = XDBar.config.getBoolean(key);
+                boolean value = XDBar.CONFIG.getBoolean(key);
 
-                checkbox = Checkbox.builder(Component.empty(), font).selected(value).onValueChange((box, val) -> XDBar.config.set(key, String.valueOf(val))).build();
+                checkbox = Checkbox.builder(Component.empty(), font).selected(value).onValueChange((box, val) -> XDBar.CONFIG.set(key, String.valueOf(val))).build();
                 children.add(checkbox);
             }
 
@@ -140,18 +142,18 @@ public class ConfigMenu extends Screen {
 
             public IntEntry(String key, int min, int max) {
                 this.label = Component.translatable("xdbar.setting." + key);
-                String value = XDBar.config.get(key);
+                String value = XDBar.CONFIG.get(key);
 
                 box = new EditBox(font, 0, 0, 60, 20, Component.literal(key));
                 box.setValue(value != null ? value : "");
                 box.setFilter(s -> s.isEmpty() || s.matches("\\d+"));
                 box.setResponder(s -> {
                     if (s.isEmpty()) {
-                        XDBar.config.set(key, "0");
+                        XDBar.CONFIG.set(key, "0");
                         return;
                     }
 
-                    XDBar.config.set(key, String.valueOf(Math.clamp(Integer.parseInt(s), min, max)));
+                    XDBar.CONFIG.set(key, String.valueOf(Math.clamp(Integer.parseInt(s), min, max)));
                 });
                 box.setTooltip(Tooltip.create(Component.translatable("xdbar.config.intbox", min, max)));
 
@@ -175,7 +177,7 @@ public class ConfigMenu extends Screen {
             public ColorEntry(String key) {
                 this.label = Component.translatable("xdbar.setting." + key);
 
-                String value = XDBar.config.get(key);
+                String value = XDBar.CONFIG.get(key);
                 String initHex = "";
 
                 if (value != null) {
@@ -186,7 +188,7 @@ public class ConfigMenu extends Screen {
                 box.setValue(initHex);
                 box.setMaxLength(8);
                 box.setFilter(s -> s.matches("^[0-9A-Fa-f]{0,8}$"));
-                box.setResponder(s -> XDBar.config.set(key, String.valueOf(XDBar.hexToInt(s))));
+                box.setResponder(s -> XDBar.CONFIG.set(key, String.valueOf(XDBar.hexToInt(s))));
                 box.setTooltip(Tooltip.create(Component.translatable("xdbar.config.colortip")));
 
                 children.add(box);
@@ -209,6 +211,35 @@ public class ConfigMenu extends Screen {
                     guiGraphics.fill(px, py, px + size, py + size, parsed);
                     guiGraphics.renderOutline(px, py, size, size, 0xFF000000);
                 }
+            }
+        }
+
+        class EnumEntry<T extends Enum<T>> extends Entry {
+            private final CycleButton<T> button;
+            private final Component label;
+            private final int width;
+
+            public EnumEntry(String key, String cycleLabel, Class<T> enumClass) {
+                this.label = Component.translatable("xdbar.setting." + key);
+                T[] values = enumClass.getEnumConstants();
+                String confValue = XDBar.CONFIG.get(key);
+                T current = confValue != null ? Enum.valueOf(enumClass, confValue) : values[0];
+
+                int maxEnumWidth = 0;
+                for (T value : values) if (font.width(value.name()) > maxEnumWidth) maxEnumWidth = font.width(value.name());
+
+                width = font.width(Component.translatable(cycleLabel)) + font.width(Component.literal(": ")) + maxEnumWidth + 10;
+                button = CycleButton.<T>builder(val -> Component.literal(val.name())).withValues(values).withInitialValue(current).create(0, 0, width, 20, Component.translatable(cycleLabel), (btn, val) -> XDBar.CONFIG.set(key, val.name()));
+                children.add(button);
+            }
+
+            @Override
+            public void render(GuiGraphics guiGraphics, int index, int y, int x, int width, int height, int mx, int my, boolean hovered, float delta) {
+                guiGraphics.drawString(font, label, x, y + 6, -1);
+
+                button.setX(x + width - button.getWidth());
+                button.setY(y);
+                button.render(guiGraphics, mx, my, delta);
             }
         }
     }
