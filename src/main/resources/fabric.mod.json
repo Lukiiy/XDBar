@@ -25,9 +25,9 @@
   ],
   "depends": {
     "fabricloader": ">=${loader_version}",
-    "minecraft": "${minecraft_version}"
+    "minecraft": ">=${minecraft_version}"
   },
   "suggests": {
-    "modmenu": ">=15.0.0-beta.1"
+    "modmenu": ">=${modmenu_version}"
   }
 }

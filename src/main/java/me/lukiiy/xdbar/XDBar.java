@@ -36,11 +36,11 @@ public class XDBar implements ClientModInitializer {
         // Default preset
         CONFIG.setIfAbsent("level.shadow", "false");
         CONFIG.setIfAbsent("level.outline", "true");
-        CONFIG.setIfAbsent("level.color", "80FF20");
+        CONFIG.setIfAbsent("level.color", String.valueOf(DEF_COLOR));
         CONFIG.setIfAbsent("level.offsetY", String.valueOf(DEF_OFFSET));
 
         CONFIG.setIfAbsent("locatorBar.pins", "true");
-        CONFIG.setIfAbsent("locatorBar.background", LocatorBgVisibility.CLEVER.name());
+        CONFIG.setIfAbsent("locatorBar.background", LocatorBgVisibility.DISABLED.name());
         CONFIG.setIfAbsent("locatorBar.arrows", "true");
         CONFIG.setIfAbsent("locatorBar.distance", "false");
         CONFIG.setIfAbsent("locatorBar.coloredArrows", "false");
