@@ -12,7 +12,7 @@ public class Config {
     private final String modName;
 
     public Config(String fileName, String modName) {
-        File confDir = FabricLoader.getInstance().getConfigDir().resolve(modName).toFile();
+        File confDir = FabricLoader.getInstance().getConfigDir().toFile();
         if (!confDir.exists()) confDir.mkdirs();
 
         this.file = new File(confDir, fileName + ".properties");
