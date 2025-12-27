@@ -2,11 +2,11 @@ plugins {
     id("fabric-loom") version "1.10-SNAPSHOT"
 }
 
-version = rootProject.property("version")!!
-group = rootProject.property("group")!!
+version = rootProject.property("mod_version")!!
+group = rootProject.property("maven_group")!!
 
 base {
-    archivesName.set(rootProject.property("name")!!.toString())
+    archivesName.set(rootProject.property("archives_base_name")!!.toString())
 }
 
 repositories {
