@@ -27,7 +27,7 @@ public class Config {
         try (InputStreamReader reader = new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8)) {
             properties.load(reader);
         } catch (IOException e) {
-            e.printStackTrace();
+            XDBar.LOGGER.error(e.getLocalizedMessage());
         }
     }
 
@@ -35,7 +35,7 @@ public class Config {
         try (OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8)) {
             properties.store(writer, modName + " Config");
         } catch (IOException e) {
-            e.printStackTrace();
+            XDBar.LOGGER.error(e.getLocalizedMessage());
         }
     }
 
