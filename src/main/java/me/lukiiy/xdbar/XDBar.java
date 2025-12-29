@@ -80,19 +80,6 @@ public class XDBar implements ClientModInitializer {
         CONFIG.set("locatorBar.background", set.name());
     }
 
-    public static int hexToInt(String hex) {
-        if (hex == null || hex.isEmpty()) return 0;
-
-        hex = hex.replace("#", "");
-        if (hex.length() == 6) hex = "FF" + hex;
-
-        try {
-            return (int) (Long.parseLong(hex, 16) & 0xFFFFFFFFL);
-        } catch (NumberFormatException e) {
-            return 0;
-        }
-    }
-
     public enum LocatorBgVisibility {
         ENABLED,
         DISABLED,

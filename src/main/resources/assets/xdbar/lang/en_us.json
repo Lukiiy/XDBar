@@ -4,7 +4,7 @@
   "xdbar.setting.locatorBar.background": "Locator Background",
   "xdbar.setting.locatorBar.arrows": "Pitch Arrows",
   "xdbar.setting.locatorBar.coloredArrows": "Colored Arrows",
-  "xdbar.setting.locatorBar.distance": "Show distance",
+  "xdbar.setting.locatorBar.distance": "Show small distances",
   "xdbar.setting.level.outline": "Text Outline",
   "xdbar.setting.level.shadow": "Text Shadow",
   "xdbar.setting.level.color": "Text Color",
@@ -13,5 +13,5 @@
   "xdbar.config.intbox": "Insert a valid number between %s and %s.",
   "xdbar.config.category.locator": "Locator Bar Changes",
   "xdbar.config.category.level": "Level Indicator Visuals",
-  "xdbar.config.stylecycle": "Style"
+  "xdbar.config.stylecycle": "State"
 }
