@@ -1,8 +1,6 @@
 package me.lukiiy.xdbar;
 
 import com.google.common.collect.Lists;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -18,11 +16,8 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
-@Environment(EnvType.CLIENT)
 public class ConfigMenu extends Screen {
     private static final Component TITLE = Component.translatable("xdbar.config.title");
     private final HeaderAndFooterLayout layout = new HeaderAndFooterLayout(this, 33, 33);
@@ -31,7 +26,6 @@ public class ConfigMenu extends Screen {
 
     public ConfigMenu(Screen before) {
         super(TITLE);
-
         this.before = before;
     }
 
@@ -128,6 +122,8 @@ public class ConfigMenu extends Screen {
             }
 
             protected void setWidget(AbstractWidget widget) {
+                if (this.widget != null) children.remove(this.widget);
+
                 this.widget = widget;
 
                 if (widget != null) {
@@ -147,13 +143,17 @@ public class ConfigMenu extends Screen {
             }
 
             @Override
-            public void render(GuiGraphics instance, int index, int y, int x, int width, int height, int mx, int my, boolean hovered, float delta) {
-                if (label != null) instance.drawString(ConfigList.this.font, label, x, y + 6, -1);
+            public void renderContent(GuiGraphics gfx, int mouseX, int mouseY, boolean hovered, float delta) {
+                int contentX = this.getContentX();
+                int contentRight = this.getContentRight();
+                int contentY = this.getContentY();
+
+                if (label != null) gfx.drawString(ConfigList.this.font, label, contentX, contentY + 6, -1);
 
                 if (widget != null) {
-                    widget.setX(x + width - widget.getWidth());
-                    widget.setY(y);
-                    widget.render(instance, mx, my, delta);
+                    widget.setX(contentRight - widget.getWidth());
+                    widget.setY(contentY);
+                    widget.render(gfx, mouseX, mouseY, delta);
                 }
             }
         }
@@ -164,8 +164,21 @@ public class ConfigMenu extends Screen {
             }
 
             @Override
-            public void render(GuiGraphics instance, int index, int y, int x, int width, int h, int mx, int my, boolean hovered, float delta) {
-                instance.drawCenteredString(font, label, x + width / 2, y + 6, -1);
+            public void renderContent(GuiGraphics instance, int mouseX, int mouseY, boolean hovered, float delta) {
+                int middleX = this.getContentXMiddle();
+                int contentY = this.getContentY();
+
+                instance.drawCenteredString(ConfigList.this.font, label, middleX, contentY + 6, -1);
+            }
+
+            @Override
+            public List<? extends GuiEventListener> children() {
+                return List.of();
+            }
+
+            @Override
+            public List<? extends NarratableEntry> narratables() {
+                return labelNarration != null ? List.of(labelNarration) : List.of();
             }
         }
 
@@ -198,8 +211,8 @@ public class ConfigMenu extends Screen {
             }
 
             @Override
-            public void render(GuiGraphics instance, int index, int y, int x, int width, int h, int mx, int my, boolean hovered, float delta) {
-                super.render(instance, index, y, x, width, h, mx, my, hovered, delta);
+            public void renderContent(GuiGraphics instance, int mouseX, int mouseY, boolean hovered, float delta) {
+                super.renderContent(instance, mouseX, mouseY, hovered, delta);
 
                 int color = hexToInt(((EditBox) widget).getValue());
                 if (color != 0) {
@@ -208,7 +221,7 @@ public class ConfigMenu extends Screen {
                     int py = widget.getY() - size / 2;
 
                     instance.fill(px, py, px + size, py + size, 0xFF000000 | color);
-                    instance.renderOutline(px, py, size, size, 0xFF000000);
+                    instance.submitOutline(px, py, size, size, 0xFF000000);
                 }
             }
 
