@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 public class XDBar implements ClientModInitializer {
     public static final String MOD_ID = "xdbar";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
-    public static Config CONFIG = new Config(MOD_ID, "XDBar");
+    public static Config CONFIG = new Config("xdBar", "XDBar");
 
     public static final int DEF_COLOR = -8323296; // vanilla level color
     public static final int DEF_OFFSET = 35; // vanilla offset
