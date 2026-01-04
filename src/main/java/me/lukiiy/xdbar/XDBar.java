@@ -57,8 +57,8 @@ public class XDBar implements ClientModInitializer {
         distanceDisplay = CONFIG.getBoolean("locatorBar.distance");
         coloredArrows = CONFIG.getBoolean("locatorBar.coloredArrows");
 
-        String processed = CONFIG.getOrDefault("level.color", "default");
-        color = processed.equalsIgnoreCase("default") ? DEF_COLOR : Integer.parseInt(processed);
+        String processed = CONFIG.getOrDefault("level.color", "0");
+        color = processed.equalsIgnoreCase("0") ? DEF_COLOR : Integer.parseInt(processed);
 
         try {
             offsetY = Integer.parseInt(CONFIG.get("level.offsetY"));
