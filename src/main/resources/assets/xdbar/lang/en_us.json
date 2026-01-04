@@ -12,6 +12,5 @@
   "xdbar.config.colortip": "Insert a valid RGB Hex value!\nExample: 80FF20",
   "xdbar.config.intbox": "Insert a valid number between %s and %s.",
   "xdbar.config.category.locator": "Locator Bar Changes",
-  "xdbar.config.category.level": "Level Indicator Visuals",
-  "xdbar.config.stylecycle": "State"
+  "xdbar.config.category.level": "Level Indicator Visuals"
 }

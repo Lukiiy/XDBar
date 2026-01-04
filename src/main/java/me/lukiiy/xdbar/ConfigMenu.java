@@ -79,7 +79,7 @@ public class ConfigMenu extends Screen {
         private void loadStuff() {
             addEntry(new CategoryEntry("locator"));
             addEntry(new BooleanEntry("locatorBar.pins"));
-            addEntry(new EnumEntry<>("locatorBar.background", "xdbar.config.stylecycle", XDBar.LocatorBgVisibility.class));
+            addEntry(new EnumEntry<>("locatorBar.background", XDBar.LocatorBgVisibility.class));
             addEntry(new BooleanEntry("locatorBar.arrows"));
             addEntry(new BooleanEntry("locatorBar.coloredArrows"));
             addEntry(new BooleanEntry("locatorBar.distance"));
@@ -227,14 +227,14 @@ public class ConfigMenu extends Screen {
         }
 
         class EnumEntry<T extends Enum<T>> extends Entry {
-            public EnumEntry(String key, String cycleLabel, Class<T> enumClass) {
+            public EnumEntry(String key, Class<T> enumClass) {
                 super(Component.translatable("xdbar.setting." + key), null);
 
                 T[] values = enumClass.getEnumConstants();
                 T current = Optional.ofNullable(XDBar.CONFIG.get(key)).map(v -> Enum.valueOf(enumClass, v)).orElse(values[0]);
 
-                int width = font.width(Component.translatable(cycleLabel)) + font.width(": ") + Arrays.stream(values).mapToInt(v -> font.width(v.name())).max().orElse(0) + 10;
-                setWidget(CycleButton.<T>builder(v -> Component.literal(v.name())).withValues(values).withInitialValue(current).create(0, 0, width, 20, Component.translatable(cycleLabel), (btn, val) -> XDBar.CONFIG.set(key, val.name())));
+                int width = Arrays.stream(values).mapToInt(v -> font.width(v.name())).max().orElse(0) + 10;
+                setWidget(CycleButton.<T>builder(v -> Component.literal(v.name())).withValues(values).displayOnlyValue().withInitialValue(current).create(0, 0, width, 20, Component.empty(), (btn, val) -> XDBar.CONFIG.set(key, val.name())));
             }
         }
     }
