@@ -10,7 +10,7 @@ import net.minecraft.client.gui.contextualbar.LocatorBarRenderer;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.resources.WaypointStyle;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
@@ -46,17 +46,17 @@ public abstract class LocBarRenderMixin {
         return XDBar.arrows ? original : TrackedWaypoint.PitchDirection.NONE;
     }
 
-    @Inject(method = "method_70870", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;blitSprite(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/ResourceLocation;IIII)V", shift = At.Shift.AFTER), locals = LocalCapture.CAPTURE_FAILSOFT)
-    private void xdBar$colorArrows(Entity entity, Level level, PartialTickSupplier partialTickSupplier, GuiGraphics guiGraphics, int i, TrackedWaypoint trackedWaypoint, CallbackInfo ci, double d, int j, Waypoint.Icon icon, WaypointStyle waypointStyle, float f, ResourceLocation resourceLocation, int k, int l, TrackedWaypoint.PitchDirection pitchDirection, int m, ResourceLocation resourceLocation2) {
+    @Inject(method = "method_70870", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;blitSprite(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/Identifier;IIII)V", shift = At.Shift.AFTER), locals = LocalCapture.CAPTURE_FAILSOFT)
+    private void xdBar$colorArrows(Entity entity, Level level, PartialTickSupplier partialTickSupplier, GuiGraphics guiGraphics, int i, TrackedWaypoint trackedWaypoint, CallbackInfo ci, double d, int j, Waypoint.Icon icon, WaypointStyle waypointStyle, float f, Identifier identifier, int k, int l, TrackedWaypoint.PitchDirection pitchDirection, int m, Identifier identifier2) {
         if (!XDBar.coloredArrows || pitchDirection == TrackedWaypoint.PitchDirection.NONE) return;
 
-        guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, resourceLocation2, j + l + 1, i + m, 7, 5, k);
+        guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, identifier2, j + l + 1, i + m, 7, 5, k);
     }
 
-    @Inject(method = "method_70870", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;blitSprite(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/ResourceLocation;IIIII)V", shift = At.Shift.AFTER), locals = LocalCapture.CAPTURE_FAILSOFT)
-    private void xdBar$deco(Entity entity, Level level, PartialTickSupplier partialTickSupplier, GuiGraphics guiGraphics, int i, TrackedWaypoint trackedWaypoint, CallbackInfo ci, double d, int j, Waypoint.Icon icon, WaypointStyle waypointStyle, float f, ResourceLocation resourceLocation, int k, int l) {
+    @Inject(method = "method_70870", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;blitSprite(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/Identifier;IIIII)V", shift = At.Shift.AFTER), locals = LocalCapture.CAPTURE_FAILSOFT)
+    private void xdBar$deco(Entity entity, Level level, PartialTickSupplier partialTickSupplier, GuiGraphics guiGraphics, int i, TrackedWaypoint trackedWaypoint, CallbackInfo ci, double d, int j, Waypoint.Icon icon, WaypointStyle waypointStyle, float f, Identifier identifier, int k, int l) {
         int distOffset = 15;
-        if (!XDBar.distanceDisplay || l < -distOffset || l > distOffset || waypointStyle.spriteLocations().size() == 1 || resourceLocation.equals(waypointStyle.spriteLocations().getLast())) return;
+        if (!XDBar.distanceDisplay || l < -distOffset || l > distOffset || waypointStyle.spriteLocations().size() == 1 || identifier.equals(waypointStyle.spriteLocations().getLast())) return;
 
         String text = Mth.floor(f) + "";
         int x = j + l + 4 - minecraft.font.width(text) / 2 + 1;

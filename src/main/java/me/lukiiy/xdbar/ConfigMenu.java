@@ -222,7 +222,7 @@ public class ConfigMenu extends Screen {
                     int out = 0xFF000000;
 
                     instance.fill(px, py, px + size, py + size, out | color);
-                    instance.submitOutline(px, py, size, size, out);
+                    instance.renderOutline(px, py, size, size, out);
                 }
             }
 
@@ -248,7 +248,7 @@ public class ConfigMenu extends Screen {
                 T current = Optional.ofNullable(XDBar.CONFIG.get(key)).map(v -> Enum.valueOf(enumClass, v)).orElse(values[0]);
 
                 int width = Arrays.stream(values).mapToInt(v -> font.width(v.name())).max().orElse(0) + 10;
-                setWidget(CycleButton.<T>builder(v -> Component.literal(v.name())).withValues(values).displayOnlyValue().withInitialValue(current).create(0, 0, width, 20, Component.empty(), (btn, val) -> XDBar.CONFIG.set(key, val.name())));
+                setWidget(CycleButton.<T>builder(v -> Component.literal(v.name()), () -> current).withValues(values).displayOnlyValue().create(0, 0, width, 20, Component.empty(), (btn, val) -> XDBar.CONFIG.set(key, val.name())));
             }
         }
     }
