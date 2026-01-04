@@ -56,9 +56,7 @@ public class XDBar implements ClientModInitializer {
         arrows = CONFIG.getBoolean("locatorBar.arrows");
         distanceDisplay = CONFIG.getBoolean("locatorBar.distance");
         coloredArrows = CONFIG.getBoolean("locatorBar.coloredArrows");
-
-        String processed = CONFIG.getOrDefault("level.color", "0");
-        color = processed.equalsIgnoreCase("0") ? DEF_COLOR : Integer.parseInt(processed);
+        color = loadColor("level.color", DEF_COLOR);
 
         try {
             offsetY = Integer.parseInt(CONFIG.get("level.offsetY"));
@@ -67,6 +65,17 @@ public class XDBar implements ClientModInitializer {
         }
 
         CONFIG.save();
+    }
+
+    private static int loadColor(String key, int defColor) {
+        int parsed = 0;
+
+        try {
+            parsed = Integer.parseInt(CONFIG.getOrDefault(key, "0"));
+        } catch (NumberFormatException ignored) { }
+
+        if (parsed == 0) CONFIG.set(key, "0");
+        return parsed == 0 ? defColor : parsed;
     }
 
     private static void convertBgVisibility() {
