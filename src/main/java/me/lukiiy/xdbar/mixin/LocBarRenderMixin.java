@@ -53,7 +53,7 @@ public abstract class LocBarRenderMixin {
     @Inject(method = "method_70870", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;blitSprite(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/ResourceLocation;IIIII)V", shift = At.Shift.AFTER), locals = LocalCapture.CAPTURE_FAILSOFT)
     private void xdBar$deco(Level level, GuiGraphics guiGraphics, int i, TrackedWaypoint trackedWaypoint, CallbackInfo ci, double d, int j, Waypoint.Icon icon, WaypointStyle waypointStyle, float f, ResourceLocation resourceLocation, int k, int l) {
         int distOffset = 15;
-        if (!XDBar.distanceDisplay || l < -distOffset || l > distOffset || resourceLocation.equals(waypointStyle.spriteLocations().getLast())) return;
+        if (!XDBar.distanceDisplay || l < -distOffset || l > distOffset || waypointStyle.spriteLocations().size() == 1 || resourceLocation.equals(waypointStyle.spriteLocations().getLast())) return;
 
         String text = Mth.floor(f) + "";
         int x = j + l + 4 - minecraft.font.width(text) / 2 + 1;
