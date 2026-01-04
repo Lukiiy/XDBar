@@ -203,11 +203,13 @@ public class ConfigMenu extends Screen {
                 super(Component.translatable("xdbar.setting." + key), createEditBox(key, "", 60));
                 EditBox box = (EditBox) widget;
 
-                box.setMaxLength(8);
-                box.setFilter(s -> s.matches("^[0-9A-Fa-f]{0,8}$"));
-                box.setValue(Integer.toHexString(Integer.parseInt(XDBar.CONFIG.getOrDefault(key, "0"))));
+                box.setMaxLength(6);
+                box.setFilter(s -> s.matches("^[0-9A-Fa-f]{0,6}$"));
                 box.setResponder(s -> XDBar.CONFIG.set(key, String.valueOf(hexToInt(s))));
                 box.setTooltip(Tooltip.create(Component.translatable("xdbar.config.colortip")));
+                box.setCursorPosition(0);
+
+                box.setValue(String.format("%06X", Integer.parseInt(XDBar.CONFIG.getOrDefault(key, "0")) & 0x00FFFFFF));
             }
 
             @Override
