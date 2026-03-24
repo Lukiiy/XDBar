@@ -3,7 +3,7 @@ package me.lukiiy.xdbar;
 import com.google.common.collect.Lists;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.*;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.layouts.HeaderAndFooterLayout;
@@ -90,8 +90,8 @@ public class ConfigMenu extends Screen {
             return 310;
         }
 
-        private EditBox createEditBox(String key, String defaultValue, int width) {
-            EditBox box = new EditBox(font, 0, 0, width, 20, Component.literal(key));
+        private EditBox createEditBox(String key, String defaultValue) {
+            EditBox box = new EditBox(font, 0, 0, 60, 20, Component.literal(key));
 
             box.setValue(XDBar.CONFIG.getOrDefault(key, defaultValue));
             return box;
@@ -143,17 +143,17 @@ public class ConfigMenu extends Screen {
             }
 
             @Override
-            public void renderContent(GuiGraphics gfx, int mouseX, int mouseY, boolean hovered, float delta) {
+            public void extractContent(GuiGraphicsExtractor graphics, int mouseX, int mouseY, boolean hovered, float a) {
                 int contentX = this.getContentX();
                 int contentRight = this.getContentRight();
                 int contentY = this.getContentY();
 
-                if (label != null) gfx.drawString(ConfigList.this.font, label, contentX, contentY + 6, -1);
+                if (label != null) graphics.text(ConfigList.this.font, label, contentX, contentY + 6, -1);
 
                 if (widget != null) {
                     widget.setX(contentRight - widget.getWidth());
                     widget.setY(contentY);
-                    widget.render(gfx, mouseX, mouseY, delta);
+                    widget.extractRenderState(graphics, mouseX, mouseY, a);
                 }
             }
         }
@@ -164,11 +164,11 @@ public class ConfigMenu extends Screen {
             }
 
             @Override
-            public void renderContent(GuiGraphics instance, int mouseX, int mouseY, boolean hovered, float delta) {
+            public void extractContent(GuiGraphicsExtractor graphics, int mouseX, int mouseY, boolean hovered, float a) {
                 int middleX = this.getContentXMiddle();
                 int contentY = this.getContentY();
 
-                instance.drawCenteredString(ConfigList.this.font, label, middleX, contentY + 6, -1);
+                graphics.centeredText(ConfigList.this.font, label, middleX, contentY + 6, -1);
             }
 
             @Override
@@ -190,22 +190,29 @@ public class ConfigMenu extends Screen {
 
         class IntEntry extends Entry {
             public IntEntry(String key, int min, int max) {
-                super(Component.translatable("xdbar.setting." + key), createEditBox(key, "0", 60));
+                super(Component.translatable("xdbar.setting." + key), createEditBox(key, "0"));
+
                 EditBox box = (EditBox) widget;
 
-                box.setFilter(s -> s.isEmpty() || s.matches("\\d+"));
                 box.setResponder(s -> XDBar.CONFIG.set(key, String.valueOf(Math.clamp(s.isEmpty() ? 0 : Integer.parseInt(s), min, max))));
+
+                XDBar.filteredResponder(box, text -> text.replaceAll("\\D+", ""), s -> XDBar.CONFIG.set(key,String.valueOf(Math.clamp(s.isEmpty() ? 0 : Integer.parseInt(s), min, max))));
             }
         }
 
         class ColorEntry extends Entry {
             public ColorEntry(String key) {
-                super(Component.translatable("xdbar.setting." + key), createEditBox(key, "", 60));
+                super(Component.translatable("xdbar.setting." + key), createEditBox(key, ""));
                 EditBox box = (EditBox) widget;
 
                 box.setMaxLength(6);
-                box.setFilter(s -> s.matches("^[0-9A-Fa-f]{0,6}$"));
-                box.setResponder(s -> XDBar.CONFIG.set(key, String.valueOf(hexToInt(s))));
+
+                XDBar.filteredResponder(box, text -> {
+                    String cleaned = text.replaceAll("[^0-9A-Fa-f]", "");
+
+                    return cleaned.length() > 6 ? cleaned.substring(0, 6) : cleaned;
+                }, s -> XDBar.CONFIG.set(key, String.valueOf(hexToInt(s))));
+
                 box.setTooltip(Tooltip.create(Component.translatable("xdbar.config.colortip")));
                 box.setCursorPosition(0);
 
@@ -213,8 +220,8 @@ public class ConfigMenu extends Screen {
             }
 
             @Override
-            public void renderContent(GuiGraphics instance, int mouseX, int mouseY, boolean hovered, float delta) {
-                super.renderContent(instance, mouseX, mouseY, hovered, delta);
+            public void extractContent(GuiGraphicsExtractor graphics, int mouseX, int mouseY, boolean hovered, float a) {
+                super.extractContent(graphics, mouseX, mouseY, hovered, a);
 
                 int color = hexToInt(((EditBox) widget).getValue());
                 if (color != 0) {
@@ -223,8 +230,8 @@ public class ConfigMenu extends Screen {
                     int py = widget.getY() - size / 2;
                     int out = 0xFF000000;
 
-                    instance.fill(px, py, px + size, py + size, out | color);
-                    instance.renderOutline(px, py, size, size, out);
+                    graphics.fill(px, py, px + size, py + size, out | color);
+                    graphics.outline(px, py, size, size, out);
                 }
             }
 

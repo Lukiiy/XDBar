@@ -4,10 +4,15 @@ import net.fabricmc.api.ClientModInitializer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
+import java.util.function.UnaryOperator;
 
 public class XDBar implements ClientModInitializer {
     public static final String MOD_ID = "xdbar";
@@ -115,5 +120,28 @@ public class XDBar implements ClientModInitializer {
         instance.text(font, value, x - 1, y, color, false);
         instance.text(font, value, x, y + 1, color, false);
         instance.text(font, value, x, y - 1, color, false);
+    }
+
+    public static void filteredResponder(EditBox box, UnaryOperator<String> filtered, Consumer<String> responder) {
+        AtomicBoolean internal = new AtomicBoolean(false);
+
+        box.setResponder(text -> {
+            if (internal.get()) return;
+
+            String cleaned = filtered.apply(text);
+            if (!cleaned.equals(text)) {
+                internal.set(true);
+
+                int cursor = box.getCursorPosition();
+
+                box.setValue(cleaned);
+                box.setCursorPosition(Math.min(cursor, cleaned.length()));
+                internal.set(false);
+
+                text = cleaned;
+            }
+
+            responder.accept(text);
+        });
     }
 }
