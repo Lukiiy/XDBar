@@ -1,27 +1,34 @@
 plugins {
-    id("fabric-loom") version "1.14-SNAPSHOT"
+    id("net.fabricmc.fabric-loom")
 }
 
 version = rootProject.property("mod_version")!!
 group = rootProject.property("maven_group")!!
 
 base {
-    archivesName.set(rootProject.property("archives_base_name")!!.toString())
+    archivesName = providers.gradleProperty("archives_base_name")
 }
 
 repositories {
     maven("https://maven.terraformersmc.com/")
 }
 
-val minecraft = project.property("minecraft_version")!!
-val loader = project.property("loader_version")!!
-val modMenuVer = project.property("modmenu_version")!!
+val minecraft = providers.gradleProperty("minecraft_version").get()
+val loader = providers.gradleProperty("loader_version").get()
+val modMenuVer = providers.gradleProperty("modmenu_version").get()
 
 dependencies {
     minecraft("com.mojang:minecraft:${minecraft}")
-    mappings(loom.officialMojangMappings())
-    modImplementation("net.fabricmc:fabric-loader:${loader}")
-    modCompileOnly("com.terraformersmc:modmenu:${modMenuVer}")
+    implementation("net.fabricmc:fabric-loader:${loader}")
+    compileOnly("com.terraformersmc:modmenu:${modMenuVer}")
+}
+
+loom {
+    mods {
+        register("xdbar") {
+            sourceSet(sourceSets.main.get())
+        }
+    }
 }
 
 tasks {
@@ -41,6 +48,8 @@ tasks {
     }
 
     jar {
+        inputs.property("archivesName", base.archivesName)
+
         from("LICENSE") {
             rename { "${it}_${base.archivesName.get()}" }
         }
@@ -48,6 +57,10 @@ tasks {
 }
 
 java {
-    toolchain.languageVersion.set(JavaLanguageVersion.of(21))
+    toolchain.languageVersion.set(JavaLanguageVersion.of(25))
+
+    sourceCompatibility = JavaVersion.VERSION_25
+    targetCompatibility = JavaVersion.VERSION_25
+
     withSourcesJar()
 }
