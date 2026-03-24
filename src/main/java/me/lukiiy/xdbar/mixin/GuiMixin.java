@@ -7,7 +7,7 @@ import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.contextualbar.ContextualBarRenderer;
 import net.minecraft.client.gui.contextualbar.LocatorBarRenderer;
 import net.minecraft.network.chat.Component;
@@ -42,23 +42,23 @@ public class GuiMixin {
                 .ifPresent(render -> locatorRenderer = render);
     }
 
-    @Redirect(method = "renderHotbarAndDecorations", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/contextualbar/ContextualBarRenderer;renderExperienceLevel(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/client/gui/Font;I)V"))
-    private void xdBar$displayLevel(GuiGraphics guiGraphics, Font font, int level) {
-        if (!XDBar.shadow && XDBar.outline && XDBar.color == XDBar.DEF_COLOR && XDBar.offsetY == XDBar.DEF_OFFSET) {
-            ContextualBarRenderer.renderExperienceLevel(guiGraphics, font, level);
-        } else {
-            Component value = Component.translatable("gui.experience.level", level);
-            int x = (guiGraphics.guiWidth() - font.width(value)) / 2;
-            int y = guiGraphics.guiHeight() - XDBar.offsetY;
+    @Redirect(method = "extractHotbarAndDecorations", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/contextualbar/ContextualBarRenderer;extractExperienceLevel(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/client/gui/Font;I)V"))
+    private void xdBar$displayLevel(GuiGraphicsExtractor graphics, Font font, int experienceLevel) {
+        if (!XDBar.shadow && XDBar.outline && XDBar.color == XDBar.DEF_COLOR && XDBar.offsetY == XDBar.DEF_OFFSET) ContextualBarRenderer.extractExperienceLevel(graphics, font, experienceLevel);
+        else {
+            Component value = Component.translatable("gui.experience.level", experienceLevel);
+            int x = (graphics.guiWidth() - font.width(value)) / 2;
+            int y = graphics.guiHeight() - XDBar.offsetY;
 
-            if (XDBar.outline) XDBar.textOutline(guiGraphics, font, value, x, y, TEXT_OUTLINE);
-            guiGraphics.drawString(font, value, x, y, XDBar.color, XDBar.shadow);
+            if (XDBar.outline) XDBar.textOutline(graphics, font, value, x, y, TEXT_OUTLINE);
+
+            graphics.text(font, value, x, y, XDBar.color, XDBar.shadow);
         }
     }
 
-    @Inject(method = "renderHotbarAndDecorations", at = @At("TAIL"))
-    private void xdBar$renderLocator(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
-        if (minecraft.player != null && minecraft.player.connection.getWaypointManager().hasWaypoints()) locatorRenderer.render(guiGraphics, deltaTracker);
+    @Inject(method = "extractHotbarAndDecorations", at = @At("TAIL"))
+    private void xdBar$renderLocator(GuiGraphicsExtractor graphics, DeltaTracker deltaTracker, CallbackInfo ci) {
+        if (minecraft.player != null && minecraft.player.connection.getWaypointManager().hasWaypoints()) locatorRenderer.extractRenderState(graphics, deltaTracker);
     }
 
     @Inject(method = "willPrioritizeExperienceInfo", at = @At("HEAD"), cancellable = true)
