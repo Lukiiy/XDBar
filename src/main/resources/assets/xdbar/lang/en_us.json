@@ -9,6 +9,7 @@
   "xdbar.setting.level.shadow": "Text Shadow",
   "xdbar.setting.level.color": "Text Color",
   "xdbar.setting.level.offsetY": "Text Y Offset",
+  "xdbar.setting.level.creativeLevel": "Show text in Creative",
   "xdbar.config.colortip": "Insert a valid RGB Hex value!\nExample: 80FF20",
   "xdbar.config.intbox": "Insert a valid number between %s and %s.",
   "xdbar.config.category.locator": "Locator Bar Changes",
