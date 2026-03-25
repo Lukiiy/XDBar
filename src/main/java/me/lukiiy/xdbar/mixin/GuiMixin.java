@@ -10,7 +10,9 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.contextualbar.ContextualBarRenderer;
 import net.minecraft.client.gui.contextualbar.LocatorBarRenderer;
+import net.minecraft.client.multiplayer.MultiPlayerGameMode;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.level.GameType;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -64,5 +66,10 @@ public class GuiMixin {
     @Inject(method = "willPrioritizeExperienceInfo", at = @At("HEAD"), cancellable = true)
     private void xdBar$prioritizeXP(CallbackInfoReturnable<Boolean> cir) {
         cir.setReturnValue(!XDBar.renderBackground(minecraft));
+    }
+
+    @Redirect(method = "renderHotbarAndDecorations", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/MultiPlayerGameMode;hasExperience()Z"))
+    private boolean xdbar$creative(MultiPlayerGameMode instance) {
+        return XDBar.creativeLevel || instance.hasExperience();
     }
 }

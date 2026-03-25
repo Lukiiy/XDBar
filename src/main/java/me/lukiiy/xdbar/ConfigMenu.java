@@ -90,6 +90,7 @@ public class ConfigMenu extends Screen {
             addEntry(new BooleanEntry("level.shadow"));
             addEntry(new ColorEntry("level.color"));
             addEntry(new IntEntry("level.offsetY", -10000, 10000));
+            addEntry(new BooleanEntry("level.creativeLevel"));
         }
 
         @Override
