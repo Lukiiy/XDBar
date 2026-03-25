@@ -26,6 +26,7 @@ public class XDBar implements ClientModInitializer {
     public static boolean arrows;
     public static boolean distanceDisplay;
     public static boolean coloredArrows;
+    public static boolean creativeLevel;
 
     @Override
     public void onInitializeClient() {
@@ -38,6 +39,7 @@ public class XDBar implements ClientModInitializer {
         CONFIG.setIfAbsent("level.outline", "true");
         CONFIG.setIfAbsent("level.color", String.valueOf(DEF_COLOR));
         CONFIG.setIfAbsent("level.offsetY", String.valueOf(DEF_OFFSET));
+        CONFIG.setIfAbsent("level.creativeLevel", "false");
 
         CONFIG.setIfAbsent("locatorBar.pins", "true");
         CONFIG.setIfAbsent("locatorBar.background", LocatorBgVisibility.DISABLED.name());
@@ -52,6 +54,7 @@ public class XDBar implements ClientModInitializer {
         shadow = CONFIG.getBoolean("level.shadow");
         outline = CONFIG.getBoolean("level.outline");
         pins = CONFIG.getBoolean("locatorBar.pins");
+        creativeLevel = CONFIG.getBoolean("level.creativeLevel");
         backgroundVisibility = LocatorBgVisibility.valueOf(CONFIG.get("locatorBar.background"));
         arrows = CONFIG.getBoolean("locatorBar.arrows");
         distanceDisplay = CONFIG.getBoolean("locatorBar.distance");
