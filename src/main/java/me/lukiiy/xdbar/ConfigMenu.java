@@ -57,7 +57,7 @@ public class ConfigMenu extends Screen {
     public void onClose() {
         XDBar.loadConfig();
 
-        if (before != null) minecraft.setScreen(before);
+        if (before != null) minecraft.setScreenAndShow(before);
     }
 
     private class ConfigList extends ContainerObjectSelectionList<ConfigList.Entry> {
