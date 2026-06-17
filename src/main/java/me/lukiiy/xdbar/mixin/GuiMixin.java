@@ -1,5 +1,6 @@
 package me.lukiiy.xdbar.mixin;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import me.lukiiy.xdbar.XDBar;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -67,8 +68,10 @@ public class GuiMixin {
         cir.setReturnValue(!XDBar.renderBackground(minecraft));
     }
 
-    @Redirect(method = "extractHotbarAndDecorations", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/MultiPlayerGameMode;hasExperience()Z"))
-    private boolean xdbar$creative(MultiPlayerGameMode instance) {
-        return XDBar.creativeLevel || instance.hasExperience();
+    @ModifyExpressionValue(method = "extractHotbarAndDecorations", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/MultiPlayerGameMode;hasExperience()Z"))
+    private boolean xdbar$creative(boolean original) {
+        if (minecraft.gameMode == null) return original;
+
+        return original || (XDBar.creativeLevel && !minecraft.gameMode.isSpectator());
     }
 }
