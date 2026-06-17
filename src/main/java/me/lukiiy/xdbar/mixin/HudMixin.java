@@ -11,7 +11,6 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.Hud;
 import net.minecraft.client.gui.contextualbar.ContextualBar;
 import net.minecraft.client.gui.contextualbar.LocatorBar;
-import net.minecraft.client.multiplayer.MultiPlayerGameMode;
 import net.minecraft.network.chat.Component;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -28,7 +27,7 @@ import java.util.function.Supplier;
 
 @Environment(EnvType.CLIENT)
 @Mixin(Hud.class)
-public class GuiMixin {
+public class HudMixin {
     @Shadow @Final private Minecraft minecraft;
     @Shadow @Final private Map<?, Supplier<ContextualBar>> contextualInfoBars;
 
