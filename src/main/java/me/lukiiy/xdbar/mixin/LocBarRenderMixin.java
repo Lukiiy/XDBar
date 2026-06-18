@@ -42,8 +42,8 @@ public abstract class LocBarRenderMixin {
     }
 
     @ModifyVariable(method = "lambda$extractRenderState$1", at = @At(value = "STORE"), ordinal = 0)
-    private TrackedWaypoint.PitchDirection xdBar$arrows(TrackedWaypoint.PitchDirection original) {
-        return XDBar.arrows ? original : TrackedWaypoint.PitchDirection.NONE;
+    private TrackedWaypoint.PitchDirection xdBar$arrows(TrackedWaypoint.PitchDirection pitchDirection) {
+        return XDBar.arrows ? pitchDirection : TrackedWaypoint.PitchDirection.NONE;
     }
 
     @Inject(method = "lambda$extractRenderState$1", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;blitSprite(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/Identifier;IIII)V", shift = At.Shift.AFTER), locals = LocalCapture.CAPTURE_FAILSOFT)
