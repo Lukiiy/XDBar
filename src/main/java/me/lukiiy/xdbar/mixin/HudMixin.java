@@ -1,6 +1,8 @@
 package me.lukiiy.xdbar.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import me.lukiiy.xdbar.XDBar;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -43,18 +45,20 @@ public class HudMixin {
                 .ifPresent(render -> locatorRenderer = render);
     }
 
-    @Redirect(method = "extractHotbarAndDecorations", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/contextualbar/ContextualBar;extractExperienceLevel(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/client/gui/Font;I)V"))
-    private void xdBar$displayLevel(GuiGraphicsExtractor graphics, Font font, int experienceLevel) {
-        if (!XDBar.shadow && XDBar.outline && XDBar.color == XDBar.DEF_COLOR && XDBar.offsetY == XDBar.DEF_OFFSET) ContextualBar.extractExperienceLevel(graphics, font, experienceLevel);
-        else {
-            Component value = Component.translatable("gui.experience.level", experienceLevel);
-            int x = (graphics.guiWidth() - font.width(value)) / 2;
-            int y = graphics.guiHeight() - XDBar.offsetY;
-
-            if (XDBar.outline) XDBar.textOutline(graphics, font, value, x, y, TEXT_OUTLINE);
-
-            graphics.text(font, value, x, y, XDBar.color, XDBar.shadow);
+    @WrapOperation(method = "extractHotbarAndDecorations", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/contextualbar/ContextualBar;extractExperienceLevel(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/client/gui/Font;I)V"))
+    private void xdBar$displayLevel(GuiGraphicsExtractor graphics, Font font, int experienceLevel, Operation<Void> original) {
+        if (!XDBar.shadow && XDBar.outline && XDBar.color == XDBar.DEF_COLOR && XDBar.offsetY == XDBar.DEF_OFFSET) {
+            original.call(graphics, font, experienceLevel);
+            return;
         }
+
+        Component value = Component.translatable("gui.experience.level", experienceLevel);
+        int x = (graphics.guiWidth() - font.width(value)) / 2;
+        int y = graphics.guiHeight() - XDBar.offsetY;
+
+        if (XDBar.outline) XDBar.textOutline(graphics, font, value, x, y, TEXT_OUTLINE);
+
+        graphics.text(font, value, x, y, XDBar.color, XDBar.shadow);
     }
 
     @Inject(method = "extractHotbarAndDecorations", at = @At("TAIL"))
