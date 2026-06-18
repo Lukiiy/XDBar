@@ -35,7 +35,7 @@ public class ConfigMenu extends Screen {
         list = new ConfigList();
 
         layout.addToContents(list);
-        layout.addToFooter(LinearLayout.horizontal().spacing(8)).addChild(Button.builder(CommonComponents.GUI_DONE, b -> onClose()).width(100).build());
+        layout.addToFooter(LinearLayout.horizontal().spacing(8)).addChild(Button.builder(CommonComponents.GUI_DONE, _ -> onClose()).width(100).build());
         layout.visitWidgets(this::addRenderableWidget);
 
         repositionElements();
