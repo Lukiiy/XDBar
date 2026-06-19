@@ -118,13 +118,6 @@ public class XDBar implements ClientModInitializer {
         };
     }
 
-    public static void textOutline(GuiGraphicsExtractor instance, Font font, Component value, int x, int y, int color) {
-        instance.text(font, value, x + 1, y, color, false);
-        instance.text(font, value, x - 1, y, color, false);
-        instance.text(font, value, x, y + 1, color, false);
-        instance.text(font, value, x, y - 1, color, false);
-    }
-
     public static void filteredResponder(EditBox box, UnaryOperator<String> filtered, Consumer<String> responder) {
         AtomicBoolean internal = new AtomicBoolean(false);
 
