@@ -55,7 +55,7 @@ public abstract class LocBarRenderMixin {
 
     @Inject(method = "lambda$extractRenderState$1", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;blitSprite(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/Identifier;IIIII)V", shift = At.Shift.AFTER), locals = LocalCapture.CAPTURE_FAILSOFT)
     private void xdBar$deco(Entity cameraEntity, Level level, PartialTickSupplier partialTickSupplier, GuiGraphicsExtractor graphics, int top, TrackedWaypoint waypoint, CallbackInfo ci, double angle, int screenMiddle, Waypoint.Icon icon, WaypointStyle style, float distance, Identifier sprite, int color, int dotPosition) {
-        int distOffset = 20;
+        int distOffset = 30;
 
         if (!XDBar.distanceDisplay || dotPosition < -distOffset || dotPosition > distOffset || style.spriteLocations().size() == 1 || sprite.equals(style.spriteLocations().getLast())) return;
 
