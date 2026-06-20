@@ -33,8 +33,7 @@ public interface ContextualBarMixin {
 
     @WrapOperation(method = "extractExperienceLevel", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;text(Lnet/minecraft/client/gui/Font;Lnet/minecraft/network/chat/Component;IIIZ)V"))
     private static void xdbar$outline(GuiGraphicsExtractor instance, Font font, Component str, int x, int y, int color, boolean dropShadow, Operation<Void> original) {
-        final int neutral = 0xFF000000;
-        if (color == neutral && (!XDBar.outline || XDBar.color == neutral)) return; // targets outline
+        if (color == XDBar.NEUTRAL && (!XDBar.outline || XDBar.color == XDBar.NEUTRAL)) return; // targets outline
 
         original.call(instance, font, str, x, y, color, dropShadow);
     }
