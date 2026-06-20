@@ -185,7 +185,7 @@ public class ConfigMenu extends Screen {
 
         class BooleanEntry extends Entry {
             public BooleanEntry(String key) {
-                super(Component.translatable("xdbar.setting." + key), Checkbox.builder(Component.empty(), font).selected(XDBar.CONFIG.getBoolean(key)).onValueChange((b, v) -> XDBar.CONFIG.set(key, String.valueOf(v))).build());
+                super(Component.translatable("xdbar.setting." + key), Checkbox.builder(Component.empty(), font).selected(XDBar.CONFIG.getBoolean(key)).onValueChange((_, v) -> XDBar.CONFIG.set(key, String.valueOf(v))).build());
             }
         }
 
@@ -217,7 +217,9 @@ public class ConfigMenu extends Screen {
                 box.setTooltip(Tooltip.create(Component.translatable("xdbar.config.colortip")));
                 box.setCursorPosition(0);
 
-                box.setValue(String.format("%06X", Integer.parseInt(XDBar.CONFIG.getOrDefault(key, "0")) & 0x00FFFFFF));
+                int stored = Integer.parseInt(XDBar.CONFIG.getOrDefault(key, "0"));
+
+                box.setValue(stored == 0 ? "" : String.format("%06X", stored & 0x00FFFFFF));
             }
 
             @Override
@@ -258,7 +260,7 @@ public class ConfigMenu extends Screen {
                 T current = Optional.ofNullable(XDBar.CONFIG.get(key)).map(v -> Enum.valueOf(enumClass, v)).orElse(values[0]);
 
                 int width = Arrays.stream(values).mapToInt(v -> font.width(v.name())).max().orElse(0) + 10;
-                setWidget(CycleButton.<T>builder(v -> Component.literal(v.name()), () -> current).withValues(values).displayOnlyValue().create(0, 0, width, 20, Component.empty(), (btn, val) -> XDBar.CONFIG.set(key, val.name())));
+                setWidget(CycleButton.<T>builder(v -> Component.literal(v.name()), () -> current).withValues(values).displayOnlyValue().create(0, 0, width, 20, Component.empty(), (_, val) -> XDBar.CONFIG.set(key, val.name())));
             }
         }
     }
