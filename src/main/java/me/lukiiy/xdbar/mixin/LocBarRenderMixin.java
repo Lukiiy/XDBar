@@ -1,5 +1,6 @@
 package me.lukiiy.xdbar.mixin;
 
+import com.llamalad7.mixinextras.sugar.Local;
 import me.lukiiy.xdbar.XDBar;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -9,7 +10,6 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.contextualbar.LocatorBar;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.resources.WaypointStyle;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
@@ -53,11 +53,11 @@ public abstract class LocBarRenderMixin {
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, arrowSprite, screenMiddle + dotPosition + 1, top + arrowTop, 7, 5, color);
     }
 
-    @Inject(method = "lambda$extractRenderState$1", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;blitSprite(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/Identifier;IIIII)V", shift = At.Shift.AFTER), locals = LocalCapture.CAPTURE_FAILSOFT)
-    private void xdBar$deco(Entity cameraEntity, Level level, PartialTickSupplier partialTickSupplier, GuiGraphicsExtractor graphics, int top, TrackedWaypoint waypoint, CallbackInfo ci, double angle, int screenMiddle, Waypoint.Icon icon, WaypointStyle style, float distance, Identifier sprite, int color, int dotPosition) {
+    @Inject(method = "lambda$extractRenderState$1", at = @At(value = "FIELD", target = "Lnet/minecraft/world/waypoints/TrackedWaypoint$PitchDirection;NONE:Lnet/minecraft/world/waypoints/TrackedWaypoint$PitchDirection;", shift = At.Shift.AFTER), locals = LocalCapture.CAPTURE_FAILSOFT)
+    private void xdBar$deco(Entity cameraEntity, Level level, PartialTickSupplier partialTickSupplier, GuiGraphicsExtractor graphics, int top, TrackedWaypoint waypoint, CallbackInfo ci, double angle, int screenMiddle, Waypoint.Icon icon, WaypointStyle style, float distance, Identifier sprite, int color, int dotPosition, @Local(name = "pitchDirection") TrackedWaypoint.PitchDirection pitchDirection) {
         int distOffset = 30;
 
-        if (!XDBar.distanceDisplay || dotPosition < -distOffset || dotPosition > distOffset || style.spriteLocations().size() == 1 || sprite.equals(style.spriteLocations().getLast())) return;
+        if (!XDBar.distanceDisplay || dotPosition < -distOffset || dotPosition > distOffset || style.spriteLocations().size() == 1 || sprite.equals(style.spriteLocations().getLast()) || pitchDirection != TrackedWaypoint.PitchDirection.NONE) return;
 
         String text = Mth.floor(distance) + "";
         int x = screenMiddle + dotPosition + 4 - minecraft.font.width(text) / 2 + 1;
