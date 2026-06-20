@@ -2,11 +2,8 @@ package me.lukiiy.xdbar;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.network.chat.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -116,13 +113,6 @@ public class XDBar implements ClientModInitializer {
                 yield player.experienceProgress == 0f;
             }
         };
-    }
-
-    public static void textOutline(GuiGraphicsExtractor instance, Font font, Component value, int x, int y, int color) {
-        instance.text(font, value, x + 1, y, color, false);
-        instance.text(font, value, x - 1, y, color, false);
-        instance.text(font, value, x, y + 1, color, false);
-        instance.text(font, value, x, y - 1, color, false);
     }
 
     public static void filteredResponder(EditBox box, UnaryOperator<String> filtered, Consumer<String> responder) {

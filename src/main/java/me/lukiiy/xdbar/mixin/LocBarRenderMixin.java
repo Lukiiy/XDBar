@@ -9,7 +9,6 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.contextualbar.LocatorBarRenderer;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.resources.WaypointStyle;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
@@ -63,7 +62,13 @@ public abstract class LocBarRenderMixin {
         int x = screenMiddle + dotPosition + 4 - minecraft.font.width(text) / 2 + 1;
         int y = top - 1;
 
-        XDBar.textOutline(graphics, minecraft.font, Component.literal(text), x, y, 0xFF000000);
+        // outline
+        graphics.text(minecraft.font, text, x + 1, y, color, false);
+        graphics.text(minecraft.font, text, x - 1, y, color, false);
+        graphics.text(minecraft.font, text, x, y + 1, color, false);
+        graphics.text(minecraft.font, text, x, y - 1, color, false);
+
+        // distance
         graphics.text(minecraft.font, text, x, y, color, false);
     }
 }

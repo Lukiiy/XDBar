@@ -16,7 +16,9 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
 public class ConfigMenu extends Screen {
     private static final Component TITLE = Component.translatable("xdbar.config.title");
