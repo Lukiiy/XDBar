@@ -64,10 +64,10 @@ public abstract class LocBarRenderMixin {
         int y = top - 1;
 
         // outline
-        graphics.text(minecraft.font, text, x + 1, y, color, false);
-        graphics.text(minecraft.font, text, x - 1, y, color, false);
-        graphics.text(minecraft.font, text, x, y + 1, color, false);
-        graphics.text(minecraft.font, text, x, y - 1, color, false);
+        graphics.text(minecraft.font, text, x + 1, y, XDBar.NEUTRAL, false);
+        graphics.text(minecraft.font, text, x - 1, y, XDBar.NEUTRAL, false);
+        graphics.text(minecraft.font, text, x, y + 1, XDBar.NEUTRAL, false);
+        graphics.text(minecraft.font, text, x, y - 1, XDBar.NEUTRAL, false);
 
         // distance
         graphics.text(minecraft.font, text, x, y, color, false);
