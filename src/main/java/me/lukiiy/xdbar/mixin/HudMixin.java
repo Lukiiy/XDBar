@@ -29,7 +29,6 @@ public class HudMixin {
     @Shadow @Final private Map<?, Supplier<ContextualBar>> contextualInfoBars;
 
     @Unique private LocatorBar locatorRenderer;
-    @Unique private static final int TEXT_OUTLINE = 0xFF000000;
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void xdBar$getRenderer(Minecraft minecraft, CallbackInfo ci) {
