@@ -1,6 +1,7 @@
 package me.lukiiy.xdbar.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import me.lukiiy.xdbar.XDBar;
@@ -31,10 +32,23 @@ public interface ContextualBarMixin {
         return original || XDBar.shadow;
     }
 
-    @WrapOperation(method = "extractExperienceLevel", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;text(Lnet/minecraft/client/gui/Font;Lnet/minecraft/network/chat/Component;IIIZ)V"))
-    private static void xdbar$outline(GuiGraphicsExtractor instance, Font font, Component str, int x, int y, int color, boolean dropShadow, Operation<Void> original) {
-        if (color == XDBar.NEUTRAL && (!XDBar.outline || XDBar.color == XDBar.NEUTRAL)) return; // targets outline
+    @WrapWithCondition(method = "extractExperienceLevel", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;text(Lnet/minecraft/client/gui/Font;Lnet/minecraft/network/chat/Component;IIIZ)V", ordinal = 0))
+    private static boolean xdbar$outline(GuiGraphicsExtractor graphics, Font font, Component str, int x, int y, int color, boolean dropShadow) {
+        return XDBar.outline;
+    }
 
-        original.call(instance, font, str, x, y, color, dropShadow);
+    @WrapWithCondition(method = "extractExperienceLevel", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;text(Lnet/minecraft/client/gui/Font;Lnet/minecraft/network/chat/Component;IIIZ)V", ordinal = 1))
+    private static boolean xdbar$outline1(GuiGraphicsExtractor graphics, Font font, Component str, int x, int y, int color, boolean dropShadow) {
+        return XDBar.outline;
+    }
+
+    @WrapWithCondition(method = "extractExperienceLevel", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;text(Lnet/minecraft/client/gui/Font;Lnet/minecraft/network/chat/Component;IIIZ)V", ordinal = 2))
+    private static boolean xdbar$outline2(GuiGraphicsExtractor graphics, Font font, Component str, int x, int y, int color, boolean dropShadow) {
+        return XDBar.outline;
+    }
+
+    @WrapWithCondition(method = "extractExperienceLevel", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;text(Lnet/minecraft/client/gui/Font;Lnet/minecraft/network/chat/Component;IIIZ)V", ordinal = 3))
+    private static boolean xdbar$outline3(GuiGraphicsExtractor graphics, Font font, Component str, int x, int y, int color, boolean dropShadow) {
+        return XDBar.outline;
     }
 }
