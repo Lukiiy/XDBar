@@ -16,6 +16,7 @@ public class XDBar implements ClientModInitializer {
 
     public static final int DEF_COLOR = -8323296; // vanilla level color
     public static final int DEF_OFFSET = 35; // vanilla offset
+    public static final int NEUTRAL = -16777216;
 
     public static boolean shadow;
     public static int color;
@@ -111,12 +112,5 @@ public class XDBar implements ClientModInitializer {
                 yield player.experienceProgress == 0f;
             }
         };
-    }
-
-    public static void textOutline(GuiGraphics instance, Font font, Component value, int x, int y, int color) {
-        instance.drawString(font, value, x + 1, y, color, false);
-        instance.drawString(font, value, x - 1, y, color, false);
-        instance.drawString(font, value, x, y + 1, color, false);
-        instance.drawString(font, value, x, y - 1, color, false);
     }
 }
