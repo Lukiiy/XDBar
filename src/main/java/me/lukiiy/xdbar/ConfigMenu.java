@@ -194,7 +194,7 @@ public class ConfigMenu extends Screen {
 
                 box.setMaxLength(6);
                 box.setFilter(s -> s.matches("^[0-9A-Fa-f]{0,6}$"));
-                box.setResponder(s -> XDBar.CONFIG.set(key, String.valueOf(hexToInt(s))));
+                box.setResponder(s -> XDBar.CONFIG.set(key, String.valueOf(hexToInt(String.format("%6s", s).replace(' ', '0')))));
                 box.setTooltip(Tooltip.create(Component.translatable("xdbar.config.colortip")));
                 box.setCursorPosition(0);
 
