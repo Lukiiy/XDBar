@@ -198,7 +198,9 @@ public class ConfigMenu extends Screen {
                 box.setTooltip(Tooltip.create(Component.translatable("xdbar.config.colortip")));
                 box.setCursorPosition(0);
 
-                box.setValue(String.format("%06X", Integer.parseInt(XDBar.CONFIG.getOrDefault(key, "0")) & 0x00FFFFFF));
+                int stored = Integer.parseInt(XDBar.CONFIG.getOrDefault(key, "0"));
+
+                box.setValue(stored == 0 ? "" : String.format("%06X", stored & 0x00FFFFFF));
             }
 
             @Override
