@@ -1,5 +1,6 @@
 package me.lukiiy.xdbar.mixin;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import me.lukiiy.xdbar.XDBar;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -44,20 +45,6 @@ public class GuiMixin {
                 .ifPresent(render -> locatorRenderer = render);
     }
 
-    @Redirect(method = "renderHotbarAndDecorations", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/contextualbar/ContextualBarRenderer;renderExperienceLevel(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/client/gui/Font;I)V"))
-    private void xdBar$displayLevel(GuiGraphics guiGraphics, Font font, int level) {
-        if (!XDBar.shadow && XDBar.outline && XDBar.color == XDBar.DEF_COLOR && XDBar.offsetY == XDBar.DEF_OFFSET) {
-            ContextualBarRenderer.renderExperienceLevel(guiGraphics, font, level);
-        } else {
-            Component value = Component.translatable("gui.experience.level", level);
-            int x = (guiGraphics.guiWidth() - font.width(value)) / 2;
-            int y = guiGraphics.guiHeight() - XDBar.offsetY;
-
-            if (XDBar.outline) XDBar.textOutline(guiGraphics, font, value, x, y, TEXT_OUTLINE);
-            guiGraphics.drawString(font, value, x, y, XDBar.color, XDBar.shadow);
-        }
-    }
-
     @Inject(method = "renderHotbarAndDecorations", at = @At("TAIL"))
     private void xdBar$renderLocator(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
         if (minecraft.player != null && minecraft.player.connection.getWaypointManager().hasWaypoints()) locatorRenderer.render(guiGraphics, deltaTracker);
@@ -68,8 +55,10 @@ public class GuiMixin {
         cir.setReturnValue(!XDBar.renderBackground(minecraft));
     }
 
-    @Redirect(method = "renderHotbarAndDecorations", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/MultiPlayerGameMode;hasExperience()Z"))
-    private boolean xdbar$creative(MultiPlayerGameMode instance) {
-        return XDBar.creativeLevel || instance.hasExperience();
+    @ModifyExpressionValue(method = "renderHotbarAndDecorations", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/MultiPlayerGameMode;hasExperience()Z"))
+    private boolean xdbar$creative(boolean original) {
+        if (minecraft.gameMode == null) return original;
+
+        return original || (XDBar.creativeLevel && !minecraft.gameMode.isAlwaysFlying());
     }
 }
