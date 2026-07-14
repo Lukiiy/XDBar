@@ -1,0 +1,17 @@
+{
+  "xdbar.config.title": "Configuração do XDBar",
+  "xdbar.setting.locatorBar.pins": "Mostrar pinos",
+  "xdbar.setting.locatorBar.background": "Mostrar background",
+  "xdbar.setting.locatorBar.arrows": "Setas de inclinação",
+  "xdbar.setting.locatorBar.coloredArrows": "Setas coloridas",
+  "xdbar.setting.locatorBar.distance": "Mostrar distâncias curtas",
+  "xdbar.setting.level.outline": "Contorno do texto",
+  "xdbar.setting.level.shadow": "Sombra do texto",
+  "xdbar.setting.level.color": "Cor do texto",
+  "xdbar.setting.level.offsetY": "Posição vertical do texto",
+  "xdbar.setting.level.creativeLevel": "Mostrar nível no Criativo",
+  "xdbar.config.colortip": "Insira um valor hexadecimal RGB válido!\nDeixe em branco para usar a cor padrão!\nEx.: 80FF20, 000000",
+  "xdbar.config.intbox": "Insira um número válido entre %s e %s.",
+  "xdbar.config.category.locator": "Aparência do Locator Bar",
+  "xdbar.config.category.level": "Aparência do Indicador de nível"
+}
