@@ -46,7 +46,7 @@ public abstract class LocBarRenderMixin {
         return XDBar.arrows ? pitchDirection : TrackedWaypoint.PitchDirection.NONE;
     }
 
-    @Inject(method = "lambda$extractRenderState$1", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;blitSprite(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/Identifier;IIII)V", shift = At.Shift.AFTER), locals = LocalCapture.CAPTURE_FAILSOFT)
+    @Inject(method = "lambda$extractRenderState$1", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;blitSprite(Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;Lnet/minecraft/resources/Identifier;IIII)V", shift = At.Shift.AFTER), locals = LocalCapture.CAPTURE_FAILSOFT)
     private void xdBar$colorArrows(Entity cameraEntity, Level level, PartialTickSupplier partialTickSupplier, GuiGraphicsExtractor graphics, int top, TrackedWaypoint waypoint, CallbackInfo ci, double angle, int screenMiddle, Waypoint.Icon icon, WaypointStyle style, float distance, Identifier sprite, int color, int dotPosition, TrackedWaypoint.PitchDirection pitchDirection, int arrowTop, Identifier arrowSprite) {
         if (!XDBar.coloredArrows || pitchDirection == TrackedWaypoint.PitchDirection.NONE) return;
 
